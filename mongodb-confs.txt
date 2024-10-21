@@ -29,4 +29,8 @@ db.createUser({
 });
 
 
+db.getUsers()
+
+
+
 # mongo "mongodb://admin:password@mongodb-0.mongodb.default.svc.cluster.local:27017?replicaSet=rs0"

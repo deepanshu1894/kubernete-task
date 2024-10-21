@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: mongodb-backup
+spec:
+  schedule: "0 0 * * *"  # Schedule to run at midnight every day
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: mongodb-backup
+            image: mongo:5.0  # MongoDB image for mongodump
+            env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongodb-root-username
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongodb-root-password
+            command:
+            - /bin/sh
+            - -c
+            - |
+              mongodump --host mongodb-0.mongo.default.svc.cluster.local:27017 \
+                        --username $MONGO_INITDB_ROOT_USERNAME \
+                        --password $MONGO_INITDB_ROOT_PASSWORD \
+                        --out /backup/$(date +\%F-\%T)  # Backup folder
+            volumeMounts:
+            - name: backup-storage
+              mountPath: /backup  # Where to store the backup
+          restartPolicy: OnFailure
+          volumes:
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: mongodb-backup-pvc  # PVC to store backups
