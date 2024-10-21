@@ -1,0 +1,32 @@
+
+
+rs.initiate(
+   {
+    _id: "rs0",
+    version: 1,
+    members: [
+        { _id: 0, host : "mongodb-0.mongo.default.svc.cluster.local:27017" },
+    ]
+  }
+)
+
+cfg.members = [
+{ _id: 0, host: "mongodb-0.mongo.default.svc.cluster.local:27017" },
+]
+
+
+# mongodb://admin:test@mongodb-0.mongodb.default.svc.cluster.local:27017?replicaSet=rs0
+
+# mongodb://<username>:<password>@mongodb-service-test\
+
+
+
+
+db.createUser({
+ user: "admin",
+ pwd: "test",
+   roles: [{ role: "root", db: "admin" }]
+});
+
+
+# mongo "mongodb://admin:password@mongodb-0.mongodb.default.svc.cluster.local:27017?replicaSet=rs0"

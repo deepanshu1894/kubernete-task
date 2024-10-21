@@ -1,0 +1,51 @@
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: mongodb
+spec:
+  serviceName: "mongo"
+  replicas: 1  # Number of MongoDB replicas/pods
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:5.0  # MongoDB container image
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-root-username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-root-password
+        - name: MONGO_INITDB_DATABASE
+          value: admin  # Optional - specify if you want to initialize a database
+        ports:
+        - containerPort: 27017  # MongoDB port
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db  # Path to persist MongoDB data
+        - name: mongodb-config
+          mountPath: /etc/mongo
+        command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
+      volumes:
+      - name: mongodb-config
+        configMap:
+          name: mongodb-configmap  # ConfigMap for MongoDB configuration
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 1Gi  # Request 1Gi of storage for each MongoDB replica
