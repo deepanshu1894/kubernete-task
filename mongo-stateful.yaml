@@ -17,6 +17,8 @@ spec:
       - name: mongodb
         image: mongo:5.0  # MongoDB container image
         env:
+        - name: ME_CONFIG_BASICAUTH
+          value: "true"  # Enable basic authentication
         - name: MONGO_INITDB_ROOT_USERNAME
           valueFrom:
             secretKeyRef:

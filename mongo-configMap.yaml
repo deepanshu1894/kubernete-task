@@ -11,4 +11,3 @@ data:
       port: 27017
     replication:
       replSetName: rs0
-    

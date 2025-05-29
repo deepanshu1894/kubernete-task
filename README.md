@@ -3,7 +3,8 @@
 
 - set inititalze mongosb cluster
 
-  ```rs.initiate(
+  ```
+        rs.initiate(
           {
             _id: "rs0",
             version: 1,
@@ -12,29 +13,34 @@
             ]
           }
         )
+
   ```
 
 - Check status of cluster
   ```
-      rs.stats()
+      rs.status()
   ```
 
 - creat a user
 
-  ```db.createUser({
+  ```
+    db.createUser({
         user: "admin",
         pwd: "test",
         roles: [{ role: "root", db: "admin" }]
     });
+
   ```
 
 - Auth User
   ``` 
-  db.auth('admin','test')
+      db.auth('admin','test')
+
   ```
-cfg.members = [
-{ _id: 0, host: "mongodb-0.mongo.default.svc.cluster.local:27017" },
-]
+  ```
+      cfg.members = [{ _id: 0, host: "mongodb-0.mongo.default.svcluster.local:27017" },]
+
+  ```
 
 
 - database_url for express
@@ -46,3 +52,7 @@ cfg.members = [
   ```
     db.getUsers()
   ```
+
+
+
+  Some sample test
